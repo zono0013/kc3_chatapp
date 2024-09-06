@@ -16,5 +16,53 @@
 
 <div id="message_div"></div>
 
+<script>
+    let chatSocket;
+    const usernameElement = document.getElementById('username');
+    const username = usernameElement.getAttribute('data-username');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        joinRoom(); // ページがロードされた瞬間に接続する
+    });
+
+    function joinRoom() {
+        const url = `ws://${window.location.host}/ws/chat/`;
+        chatSocket = new WebSocket(url);
+        initChatSocket();
+    }
+
+    function initChatSocket() {
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log('Data:', data);
+            if (data.type === 'chat') {
+                console.log('Message:', data.message);
+                addMessage(data.message, data.user);
+            }
+        };
+
+        document.getElementById('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            sendMessage();
+        });
+    }
+
+    function addMessage(message, username) {
+        const messagesDiv = document.getElementById(`message_div`);
+        messagesDiv.insertAdjacentHTML('beforeend', `<p>${username}:${message}</p>`);
+    }
+
+    function sendMessage() {
+        const form = document.getElementById('form');
+        const formData = new FormData(form);
+        const message = formData.get('message').trim();
+        if(message){
+            console.log(message);
+            chatSocket.send(JSON.stringify({'message': message, 'user': username}));
+            form.reset();
+        }
+
+    }
+</script>
 </body>
 </html>
