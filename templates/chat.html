@@ -14,6 +14,13 @@
     <input type="text" name="message" placeholder="Enter message">
 </form>
 
+<!-- チャットの履歴表示 -->
+<div id="chat-log">
+    {% for message in messages %}
+    <p>{{ message.user.username }}:{{ message.content }}</p>
+    {% endfor %}
+</div>
+
 <div id="message_div"></div>
 
 <script>

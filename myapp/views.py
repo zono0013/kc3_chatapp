@@ -6,15 +6,22 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from .models import Message  # 追加
 
 # Create your views here.
+
 
 # チャット画面を表示するビュー
 class ChatView(View):
     @method_decorator(login_required)
-    def get(self, request):
+    def get(self, request, room_name='main'):  # 追加
         user = request.user
-        return render(request, "chat.html", {"user": user})
+        messages = Message.objects.filter(room=room_name)  # 追加
+        return render(request, "chat.html", {
+            "user": user,
+            "room_name": room_name,  # 追加
+            "messages": messages  # 追加
+        })
 
 
 chat = ChatView.as_view()
