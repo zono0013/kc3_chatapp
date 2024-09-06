@@ -253,4 +253,5 @@ docker-compose up --build
 <img width="451" alt="スクリーンショット 2024-09-07 4 00 12" src="https://github.com/user-attachments/assets/c9d45949-ee5e-4713-b312-11cedb24bf0b">
 
 ログインボタンをクリックすると`url`が`http://0.0.0.0:8000/chat/`に変化し、チャット用の画面に変わったことがわかる。ここまで出来たらOK！！
+
 <img width="434" alt="スクリーンショット 2024-09-07 4 01 20" src="https://github.com/user-attachments/assets/3da4f6a4-d662-4db5-abdd-3d2cfeb32f69">
