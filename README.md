@@ -19,7 +19,7 @@ docker-compose run web django-admin startproject myproject .
 docker-compose run web python manage.py startapp myapp
 ```
 
-##SQLiteの作成
+## SQLiteの作成
 Djangoにデフォルトで入っているアプリケーションを使うために、データベーステーブルを作成する必要がある。
 
 ```
