@@ -3,7 +3,7 @@
 kc3 で チャットアプリを作成する勉強会 を行うためのものである。
 
 # Djangoのセットアップ
-このブランチではDjangoのプロジェクトとアプリケーションの作成を行うためのものである。
+このブランチでは`Djangoのプロジェクトとアプリケーション`、`SQLite`の作成を行うためのものである。
 
 ## Djangoのプロジェクトの作成
 下記のコマンドはカレントディレクトリに、`myproject`という名前のプロジェクトを作成するためのものである。
@@ -17,6 +17,13 @@ docker-compose run web django-admin startproject myproject .
 
 ```
 docker-compose run web python manage.py startapp myapp
+```
+
+##SQLiteの作成
+Djangoにデフォルトで入っているアプリケーションを使うために、データベーステーブルを作成する必要がある。
+
+```
+docker-compose run --rm web python manage.py migrate
 ```
 
 # 参考
