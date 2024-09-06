@@ -36,6 +36,55 @@ docker-compose run --rm web python manage.py migrate
   - routing.py
   - consumers.py
 
+## 結果
+ここまでの確認として`tree`コマンドを使用すると下記の結果が得られる。
+
+```bush
+.
+├── Dockerfile
+├── README.md
+├── db.sqlite3
+├── docker-compose.yml
+├── manage.py
+├── myapp
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-39.pyc
+│   │   ├── admin.cpython-39.pyc
+│   │   ├── apps.cpython-39.pyc
+│   │   └── models.cpython-39.pyc
+│   ├── admin.py
+│   ├── apps.py
+│   ├── consumers.py
+│   ├── migrations
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       └── __init__.cpython-39.pyc
+│   ├── models.py
+│   ├── routing.py
+│   ├── tests.py
+│   └── views.py
+├── myproject
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-39.pyc
+│   │   ├── asgi.cpython-39.pyc
+│   │   ├── settings.cpython-39.pyc
+│   │   ├── urls.cpython-39.pyc
+│   │   └── wsgi.cpython-39.pyc
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── requirements.txt
+└── templates
+    ├── chat.html
+    ├── login.html
+    └── signup.html
+
+```
+
+
 ## 参考
 プロジェクトとアプリケーションの違いやそれぞれのセットアップについて詳しくは下記のリンクを参照してほしい
 
