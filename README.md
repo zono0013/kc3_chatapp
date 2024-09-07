@@ -47,14 +47,13 @@ from myapp.views import chat, login_chat, signup_chat
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/', chat, name="chat"),
-    path('', login_chat, name='login'),
+    # 他のURLパターンの追加
     path('signup/', signup_chat, name="signup"),
 ]
 ```
-役割: 
 
-必要性: 
+> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html
+](https://github.com/zono0013/kc3_chatapp/blob/chat/myproject/urls.py)
 
 ### views.py
 ```python
@@ -70,12 +69,9 @@ from django.views import View
 # Create your views here.
 
 # チャット画面を表示するビュー
+# loginをしていないと弾く処理、ユーザーの名前を返す処理、chat.htmlの表示の３つの機能をつける。
 class ChatView(View):
-    @method_decorator(login_required)
-    def get(self, request):
-        user = request.user
-        return render(request, "chat.html", {"user": user})
-
+    
 
 chat = ChatView.as_view()
 
@@ -84,29 +80,20 @@ chat = ChatView.as_view()
 class Login(View):
 
     # ログイン画面を表示
-    def get(self, request):
-        return render(request, "login.html")
-
+    
     # ログイン機能
-    def post(self, request):
-
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+    
 
             # ユーザー認証
-            user = authenticate(request, username=username, password=password)
+            
 
-            if user is not None:
+            
                 # ログイン成功
-                login(request, user)
-                return redirect('chat')
-            else:
+                
                 # ログイン失敗
-                messages.error(request, 'ユーザー名またはパスワードが間違っています。')
+               
 
-        return render(request,"login.html")
-
+        
 
 login_chat = Login.as_view()
 
@@ -145,9 +132,9 @@ class SignupView(View):
 
 signup_chat = SignupView.as_view()
 ```
-役割: 
 
-必要性:
+> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html
+](https://github.com/zono0013/kc3_chatapp/blob/chat/myapp/views.py)
 
 ## クライアントの実装
 
@@ -179,37 +166,14 @@ signup_chat = SignupView.as_view()
 </html>
 ```
 
-役割: 
-必要性: 
 
 ### signup.html
 
 ```HTML
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-
-<body>
-<form method="post" action="{% url 'signup' %}">
-    {% csrf_token %}
-    <label for="username">ユーザー名:</label>
-    <input type="text" id="username" name="new_username">
-    <br>
-    <label for="userpassword">パスワード:</label>
-    <input type="password" id="userpassword" name="new_password">
-    <br>
-    <button type="submit">ログイン</button>
-</form>
-</body>
-
-</html>
+<!-- login.htmlを元に考えてみよう -->
 ```
-役割: 
-必要性: 
+
+> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html](https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html)
 
 ### chat.html
 
@@ -235,8 +199,7 @@ signup_chat = SignupView.as_view()
 </body>
 </html>
 ```
-役割: 
-必要性: 
+
 
 ## 実装結果の確認
 下記のコマンドでプロジェクトを立ち上げる
