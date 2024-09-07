@@ -19,93 +19,139 @@ kc3 で チャットアプリを作成する勉強会 を行うためのもの�
 環境構築は`setup`ブランチに書いてある手順ですでに出来上がっているものとする。
 > https://github.com/zono0013/kc3_chatapp/blob/setup/README.md
 
+さらに基本段階の３つはすでに終了しているものとする
+`myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ`
+> https://github.com/zono0013/kc3_chatapp/blob/main/README.md
+
+`アプリケーションへのログイン機能の追加`
+> https://github.com/zono0013/kc3_chatapp/blob/login/README.md
+
+`チャット機能の実装`
+> https://github.com/zono0013/kc3_chatapp/blob/chat/README.md
+
 この後には`基本３つの段階`と`１つのオプション`でハンズオンに取り組んでいただく。
 
-基本段階
-1. myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ
-2. アプリケーションへのログイン機能の追加
-3. チャット機能の実装
+~~基本段階~~
+~~1. myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ~~
+~~2. アプリケーションへのログイン機能の追加~~
+~~3. チャット機能の実装~~
 
 オプション
 1. チャット履歴の追加
 
 それぞれの実装の完成形は`project_setting`,`login`,`chat`,`option1`のブランチに記載してある。
 
-**以降このREADMEでは`myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ`の手順について記載する。**
+**以降このREADMEでは`チャット履歴の追加`の手順について記載する。**
 
-## myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ
+## バックエンド実装
 
-### ALLOWED_HOSTS の追加
+### models.py
 ```python
-ALLOWED_HOSTS = [
-    "localhost",  # 追加
-    "0.0.0.0",  # 追加
-]
-```
-役割: 開発サーバーがリクエストを受け付けるホストを指定します。
+from django.db import models
+from django.contrib.auth.models import User
 
-必要性: ローカル開発環境でDjangoアプリケーションを実行するために必要です。セキュリティ上の理由から、Djangoは許可されたホストからのリクエストのみを受け付けます。
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    room = models.CharField(max_length=255)
 
-### INSTALLED_APPS への追加
-```python
-INSTALLED_APPS = [
-    ...
-    'myapp',  # 追加
-    'channels',  # 追加
-]
+    def __str__(self):
+        return f'{self.user.username}: {self.content} [{self.timestamp}]'
 ```
-役割: プロジェクトで使用するDjangoアプリケーションとライブラリを指定します。
+役割:
 
 必要性:
-  - 'myapp': 開発するチャットアプリケーションを Django プロジェクトに統合します。
-  - 'channels': WebSocket を使用したリアルタイム通信を可能にするDjango Channels を有効にします。
 
-### テンプレートディレクトリの設定
-```python
-TEMPLATES = [
-    {
-        ...
-        'DIRS': [BASE_DIR/'templates'],  # 追加
-        ...
-    },
-]
+### マイグレーション
+Modelsで宣言したもののテーブルを作成し使い得る状態にするためには下記２つの動作が必要である。
+
+```bash
+docker-compose run web python manage.py makemigrations
 ```
-役割: プロジェクト全体で使用するテンプレートファイル(HTMLファイル)の場所を指定します。
-必要性: アプリケーション外の共通テンプレートを使用可能にします。
 
-### ASGI_APPLICATIONの設定
-```python
-ASGI_APPLICATION = 'myproject.asgi.application'
+```bash
+ docker-compose run web python manage.py migrate 
 ```
-役割: ASGIサーバーがDjangoアプリケーションを実行するためのエントリーポイントを指定します。
-必要性: 通常のHTTP通信に加え、Django Channelsを使用したWebSocket通信を可能にします。
 
-### CHANNEL_LAYERSの設定
+### views.py
 ```python
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('redis', 6379)],
-        },
-    },
-}
-```
-役割: Django ChannelsのバックエンドとしてRedisを使用するように設定します。
-必要性: 複数のWebSocket接続間でメッセージを効率的に配信するために必要です。Redisは高速で信頼性の高いメッセージングシステムを提供します。
+from .models import Message  # 追加
 
->Redisについて詳しくは以下を参照  
-[http://redis.shibu.jp](http://redis.shibu.jp)
+class ChatView(View):
+    @method_decorator(login_required)
+    def get(self, request, room_name='main'):  # 追加
+        user = request.user
+        messages = Message.objects.filter(room=room_name)  # 追加
+        return render(request, "chat.html", {
+            "user": user,
+            "room_name": room_name,  # 追加
+            "messages": messages  # 追加
+        })
+```
+役割: 
+
+必要性:
+
+### consumers.py
+```python
+from .models import Message  # 追加
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+#一部省略
+
+async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+        user = self.scope["user"]
+
+        # メッセージをデータベースに保存
+        await self.save_message(user, self.room_name, message)  # 追加
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'user': user.username,
+            }
+        )
+
+#一部省略
+
+
+    @database_sync_to_async  # 追加
+    def save_message(self, user, room, message):  # 追加
+        Message.objects.create(user=user, room=room, content=message)  # 追加
+```
+役割: 
+
+必要性: 
+
+## クライアント実装
+### chat.html
+```HTML
+    <!-- チャットの履歴表示 -->
+    <div id="chat-log">
+        {% for message in messages %}
+            <p>{{ message.user.username }}:{{ message.content }}</p>
+        {% endfor %}
+    </div>
+```
+役割: 
+必要性: 
+
 
 ## 実装結果の確認
+
 下記のコマンドでプロジェクトを立ち上げる
 ```bash
 docker-compose up --build
 ```
 
-`http://0.0.0.0:8000/`を開いて下記のような状態が見られると成功である。
+`http://0.0.0.0:8000/`を開いてログインし、メッセージを送信。画面をリロードしても送ったメッセージを見ることができると完成！！
 
-<img width="1470" alt="スクリーンショット 2024-09-07 2 49 43" src="https://github.com/user-attachments/assets/5bb9f5d1-483b-42c5-98a6-892506e3817d">
 
 
 
