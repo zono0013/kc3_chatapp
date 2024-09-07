@@ -52,7 +52,7 @@ urlpatterns = [
 ]
 ```
 
-> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html
+> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/myproject/urls.py
 ](https://github.com/zono0013/kc3_chatapp/blob/chat/myproject/urls.py)
 
 ### views.py
@@ -133,7 +133,7 @@ class SignupView(View):
 signup_chat = SignupView.as_view()
 ```
 
-> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/templates/login.html
+> 解答例：[https://github.com/zono0013/kc3_chatapp/blob/chat/myapp/views.py
 ](https://github.com/zono0013/kc3_chatapp/blob/chat/myapp/views.py)
 
 ## クライアントの実装
