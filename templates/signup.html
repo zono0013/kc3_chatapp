@@ -10,10 +10,10 @@
 <form method="post" action="{% url 'signup' %}">
     {% csrf_token %}
     <label for="username">ユーザー名:</label>
-    <input type="text" id="username" name="new_username">
+    <input type="text" id="username" name="new_username" required>
     <br>
     <label for="userpassword">パスワード:</label>
-    <input type="password" id="userpassword" name="new_password">
+    <input type="password" id="userpassword" name="new_password" required>
     <br>
     <button type="submit">ログイン</button>
 </form>
