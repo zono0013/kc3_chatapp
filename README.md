@@ -25,8 +25,11 @@ kc3 で チャットアプリを作成する勉強会 を行うためのもの�
 この後には`基本３つの段階`と`１つのオプション`でハンズオンに取り組んでいただく。
 
 基本段階
+
 ~~1. myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ~~
+
 2. アプリケーションへのログイン機能の追加
+
 3. チャット機能の実装
 
 オプション
@@ -218,3 +221,7 @@ docker-compose up --build
 ログインボタンをクリックすると`url`が`http://0.0.0.0:8000/chat/`に変化し、チャット用の画面に変わったことがわかる。ここまで出来たらOK！！
 
 <img width="434" alt="スクリーンショット 2024-09-07 4 01 20" src="https://github.com/user-attachments/assets/3da4f6a4-d662-4db5-abdd-3d2cfeb32f69">
+
+# 次章: チャット機能の実装
+https://github.com/zono0013/kc3_chatapp/tree/chat
+
