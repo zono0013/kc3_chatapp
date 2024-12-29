@@ -107,5 +107,6 @@ docker-compose up --build
 
 <img width="1470" alt="スクリーンショット 2024-09-07 2 49 43" src="https://github.com/user-attachments/assets/5bb9f5d1-483b-42c5-98a6-892506e3817d">
 
-
+# 次章: 認証機能を作成する
+https://github.com/zono0013/kc3_chatapp/tree/login
 
