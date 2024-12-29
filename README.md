@@ -29,14 +29,17 @@ kc3 で チャットアプリを作成する勉強会 を行うためのもの�
 この後には`基本３つの段階`と`１つのオプション`でハンズオンに取り組んでいただく。
 
 基本段階
+
 ~~1. myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ~~
+
 ~~2. アプリケーションへのログイン機能の追加~~
+
 3. チャット機能の実装
 
 オプション
 1. チャット履歴の追加
 
-それぞれの実装の完成形は`project_setting`,`login`,`chat`,`option1`のブランチに記載してある。
+それぞれの実装の完成形は`project_setting`,`login`,`chat`,`v1`のブランチに記載してある。
 
 **以降このREADMEでは`チャット機能の実装`の手順について記載する。**
 
@@ -63,9 +66,6 @@ application = ProtocolTypeRouter({
     ),
 })
 ```
-役割: 
-
-必要性: 
 
 ### routing.py
 ```python
@@ -76,9 +76,6 @@ websocket_urlpatterns = [
     re_path(r'ws/chat/$', consumers.ChatConsumer.as_asgi()),
 ]
 ```
-役割: 
-
-必要性:
 
 ### consumers.py
 ```python
@@ -123,9 +120,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'user': user,
         }))
 ```
-役割: 
-
-必要性:
 
 ## クライアントの実装
 
@@ -182,9 +176,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     </script>
 ```
 
-役割: 
-必要性: 
-
 ## 実装結果の確認
 下記のコマンドでプロジェクトを立ち上げる
 ```bash
@@ -216,3 +207,8 @@ CHANNEL_LAYERS = {
     }
 }
 ```
+
+# 次章: チャット履歴の機能追加
+https://github.com/zono0013/kc3_chatapp/tree/v1
+
+
