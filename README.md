@@ -29,7 +29,7 @@ kc3 で チャットアプリを作成する勉強会 を行うためのもの�
 オプション
 1. チャット履歴の追加
 
-それぞれの実装の完成形は`project_setting`,`login`,`chat`,`option1`のブランチに記載してある。
+それぞれの実装の完成形は`project_setting`,`login`,`chat`,`v1`のブランチに記載してある。
 
 **以降このREADMEでは`myproject/setting.pyの変更によるDjangoプロジェクトのセットアップ`の手順について記載する。**
 
